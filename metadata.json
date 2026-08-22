@@ -1,0 +1,6 @@
+{
+  "name": "DayFlow",
+  "description": "DayFlow — Enterprise Professional Employee Dashboard & Productivity Cockpit with comprehensive leave monitoring, leave request workflows, attendance tracking, and company workplace management.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
