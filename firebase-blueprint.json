@@ -1,0 +1,120 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "type": "object",
+      "description": "User profile containing employee data and authorization roles",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "role": { "type": "string" },
+        "roleType": { "type": "string", "enum": ["hr", "employee"] },
+        "isHR": { "type": "boolean" },
+        "department": { "type": "string" },
+        "manager": { "type": "string" },
+        "managerEmail": { "type": "string" },
+        "salary": { "type": "object" },
+        "streak": { "type": "number" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["name", "email", "roleType"]
+    },
+    "Task": {
+      "title": "Task",
+      "type": "object",
+      "description": "Task items for employee daily workflow and focus timer",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "category": { "type": "string" },
+        "priority": { "type": "string", "enum": ["Urgent", "High", "Medium", "Low"] },
+        "status": { "type": "string", "enum": ["pending", "completed"] },
+        "dueDate": { "type": "string" },
+        "dueTime": { "type": "string" },
+        "estimatedMinutes": { "type": "number" },
+        "userEmail": { "type": "string" },
+        "completedAt": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "status", "userEmail"]
+    },
+    "LeaveRequest": {
+      "title": "LeaveRequest",
+      "type": "object",
+      "description": "Leave requests submitted by employees for HR or manager approval",
+      "properties": {
+        "id": { "type": "string" },
+        "leaveType": { "type": "string" },
+        "duration": { "type": "number" },
+        "startDate": { "type": "string" },
+        "endDate": { "type": "string" },
+        "reason": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "cancelled"] },
+        "userEmail": { "type": "string" },
+        "userName": { "type": "string" },
+        "employeeId": { "type": "string" },
+        "manager": { "type": "string" },
+        "appliedAt": { "type": "string" }
+      },
+      "required": ["leaveType", "duration", "status", "userEmail"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "type": "object",
+      "description": "Daily punch in/out and active shift log",
+      "properties": {
+        "id": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "isPunchedIn": { "type": "boolean" },
+        "punchInTime": { "type": "string" },
+        "punchOutTime": { "type": "string" },
+        "activeBreak": { "type": "string" },
+        "todayShift": { "type": "string" },
+        "updatedAt": { "type": "string" }
+      },
+      "required": ["userEmail"]
+    },
+    "SupportTicket": {
+      "title": "SupportTicket",
+      "type": "object",
+      "description": "Internal enterprise support and helpdesk ticket",
+      "properties": {
+        "id": { "type": "string" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "priority": { "type": "string" },
+        "status": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "assignedTo": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["title", "category", "userEmail"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile collection"
+    },
+    "/tasks/{taskId}": {
+      "schema": "Task",
+      "description": "Tasks collection"
+    },
+    "/leaves/{leaveId}": {
+      "schema": "LeaveRequest",
+      "description": "Leave requests collection"
+    },
+    "/attendance/{recordId}": {
+      "schema": "AttendanceRecord",
+      "description": "Attendance punch clock records"
+    },
+    "/support_tickets/{ticketId}": {
+      "schema": "SupportTicket",
+      "description": "Helpdesk support tickets"
+    }
+  }
+}
