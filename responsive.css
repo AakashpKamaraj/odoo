@@ -1,0 +1,217 @@
+/* ==========================================================================
+   DAYFLOW RESPONSIVE DESIGN - BREAKPOINTS & ADAPTATIONS
+   ========================================================================== */
+
+/* --- Tablet / Medium Screen (max-width: 1024px) --- */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+
+  .metrics-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .dashboard-main-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .login-hero-title {
+    font-size: 2.25rem;
+  }
+}
+
+/* --- Small Tablet & Mobile Landscape (max-width: 768px) --- */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 260px;
+    --header-height: 64px;
+  }
+
+  .app-sidebar {
+    transform: translateX(-100%);
+    box-shadow: var(--shadow-xl);
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(3px);
+    z-index: 35;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+  }
+
+  .sidebar-backdrop.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .app-main {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  .mobile-menu-btn {
+    display: inline-flex;
+  }
+
+  .app-header {
+    padding: 0 1.25rem;
+  }
+
+  .header-search {
+    display: none; /* Collapsed on mobile, available via dedicated modal or filter */
+  }
+
+  .page-content {
+    padding: 1.25rem 1rem;
+  }
+
+  .dashboard-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+  }
+
+  .hero-greeting {
+    font-size: 1.5rem;
+  }
+
+  .focus-card {
+    padding: 1.25rem 1.5rem;
+  }
+
+  .focus-task-title {
+    font-size: 1.125rem;
+  }
+
+  .login-viewport {
+    flex-direction: column;
+  }
+
+  .login-hero {
+    display: none; /* Focus directly on login form on mobile */
+  }
+
+  .login-form-area {
+    padding: 2rem 1.25rem;
+  }
+
+  /* Tasks page controls */
+  .tasks-toolbar {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .tasks-filter-pills {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Calendar View on Mobile */
+  .calendar-grid-header, .calendar-days-grid {
+    font-size: 0.75rem;
+  }
+
+  .calendar-day-cell {
+    min-height: 70px !important;
+    padding: 0.25rem !important;
+  }
+
+  .calendar-day-number {
+    font-size: 0.75rem !important;
+  }
+
+  .calendar-task-tag {
+    display: none !important; /* On small screen show dots instead of full labels */
+  }
+
+  .calendar-task-dot-indicator {
+    display: block !important;
+  }
+
+  .calendar-header-actions {
+    flex-wrap: wrap;
+  }
+
+  /* Task Item Actions on touch */
+  .task-item-actions {
+    opacity: 1; /* Always visible on touch screens */
+  }
+}
+
+/* --- Mobile Portrait (max-width: 480px) --- */
+@media (max-width: 480px) {
+  .metrics-grid {
+    grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .metric-card {
+    padding: 1rem 1.25rem;
+  }
+
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .focus-actions {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+  }
+
+  .focus-actions .btn {
+    width: 100%;
+  }
+
+  .page-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .page-header-row .btn-primary {
+    width: 100%;
+  }
+
+  .modal-container {
+    max-height: 94vh;
+    border-radius: var(--radius-lg);
+  }
+
+  .modal-body {
+    padding: 1rem;
+  }
+
+  .modal-footer {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .modal-footer .btn {
+    width: 100%;
+  }
+
+  .social-login-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .toast-container {
+    left: 1rem;
+    right: 1rem;
+    bottom: 1rem;
+  }
+
+  .toast {
+    min-width: 100%;
+  }
+}
