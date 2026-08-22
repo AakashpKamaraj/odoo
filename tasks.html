@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Tasks — DayFlow</title>
+  <meta name="description" content="Manage, prioritize, and track all your tasks in DayFlow." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+  <style>
+    /* Tasks Management Specific Styles */
+    .tasks-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .filter-tab-pills {
+      display: flex;
+      align-items: center;
+      gap: 0.375rem;
+      background-color: var(--bg-subtle);
+      padding: 0.25rem;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-subtle);
+    }
+
+    .filter-tab-btn {
+      padding: 0.4375rem 0.875rem;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .filter-tab-btn:hover {
+      color: var(--text-main);
+    }
+
+    .filter-tab-btn.active {
+      background-color: var(--bg-surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-xs);
+      font-weight: 700;
+    }
+
+    .tasks-filter-row {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+    }
+
+    .tasks-grid-layout {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .tasks-list-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .task-manage-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+    }
+
+    .view-toggle-group {
+      display: flex;
+      align-items: center;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 0.125rem;
+    }
+
+    .view-toggle-btn {
+      padding: 0.375rem 0.5rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      border-radius: var(--radius-xs);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .view-toggle-btn.active {
+      background-color: var(--bg-surface);
+      color: var(--primary);
+      box-shadow: var(--shadow-xs);
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for Celebration -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" title="DayFlow Homepage">
+          <div class="brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="brand-logo-text">DAYFLOW</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="/" class="nav-item" id="navHome">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home Page</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Workspace</div>
+        <a href="/pages/dashboard.html" class="nav-item" id="navDashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/pages/leaves.html" class="nav-item" id="navLeaves">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Leaves & Attendance</span>
+        </a>
+        <a href="/pages/tasks.html" class="nav-item active" id="navTasks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>My Tasks</span>
+          <span class="nav-badge badge-tasks-count" style="display: none;">0</span>
+        </a>
+        <a href="/pages/calendar.html" class="nav-item" id="navCalendar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Account</div>
+        <a href="/pages/profile.html" class="nav-item" id="navProfile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile & Badges</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/pages/profile.html" class="user-mini-profile">
+          <div class="user-mini-avatar user-avatar-initials">AM</div>
+          <div class="user-mini-info">
+            <div class="user-mini-name user-name-display">Alex Morgan</div>
+            <div class="user-mini-role user-role-display">Senior Product Designer</div>
+          </div>
+        </a>
+        <div style="display: flex; gap: 0.375rem; margin-top: 0.375rem;">
+          <button type="button" class="btn btn-secondary btn-sm w-full" data-open-modal="switchUserModal" style="font-size: 0.75rem; padding: 0.35rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" title="Switch Between Employees & Single HR">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span>Switch</span>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm logout-btn" id="tasksSidebarLogoutBtn" style="font-size: 0.75rem; padding: 0.35rem 0.6rem; color: var(--danger);" title="Log Out from DayFlow">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle sidebar menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search tasks, categories..." />
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Firebase Cloud Status Badge -->
+          <div class="firebase-sync-badge"></div>
+
+          <!-- User Role Tag -->
+          <div class="user-role-badge-tag"></div>
+
+          <div class="streak-pill">
+            <span>🔥</span>
+            <span class="user-streak-count">7 day streak</span>
+          </div>
+
+          <button class="btn btn-primary btn-sm" data-open-modal="addTaskModal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Add Task</span>
+          </button>
+
+          <button class="btn btn-icon theme-toggle-btn" aria-label="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+
+          <!-- Header Logout Button -->
+          <button type="button" class="btn btn-secondary btn-sm logout-btn" id="tasksHeaderLogoutBtn" title="Log Out from DayFlow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Tasks Content -->
+      <main class="page-content" id="tasksPageMain">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-row">
+            <div>
+              <h1 class="page-title">My Tasks</h1>
+              <p class="page-subtitle">Organize your work, prioritize deliverables, and stay in complete control.</p>
+            </div>
+            <button class="btn btn-primary" data-open-modal="addTaskModal">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Create Task</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Tabs Toolbar -->
+        <div class="tasks-toolbar">
+          <div class="filter-tab-pills" id="statusFilterTabs">
+            <button class="filter-tab-btn active" data-status="all">All Tasks</button>
+            <button class="filter-tab-btn" data-status="today">Today</button>
+            <button class="filter-tab-btn" data-status="upcoming">Upcoming</button>
+            <button class="filter-tab-btn" data-status="completed">Completed</button>
+            <button class="filter-tab-btn" data-status="overdue">Overdue</button>
+          </div>
+
+          <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <!-- Grid / List Switcher -->
+            <div class="view-toggle-group">
+              <button class="view-toggle-btn active" id="viewGridBtn" title="Grid View" aria-label="Grid View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              </button>
+              <button class="view-toggle-btn" id="viewListBtn" title="List View" aria-label="List View">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              </button>
+            </div>
+            <span id="tasksResultCount" style="font-size: 0.8125rem; color: var(--text-muted); font-weight: 600;">0 tasks</span>
+          </div>
+        </div>
+
+        <!-- Filter & Search Controls Row -->
+        <div class="tasks-filter-row">
+          <!-- Search Box -->
+          <div style="position: relative; flex: 1; min-width: 220px;">
+            <svg style="position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input 
+              type="text" 
+              id="tasksSearchInput" 
+              class="form-input" 
+              style="padding-left: 2.5rem; height: 38px; font-size: 0.875rem;" 
+              placeholder="Search by title, description, category..." 
+            />
+          </div>
+
+          <!-- Priority Filter -->
+          <div style="min-width: 140px;">
+            <select id="priorityFilterSelect" class="form-select" style="height: 38px; font-size: 0.875rem; padding: 0.375rem 0.75rem;">
+              <option value="all">Priority: All</option>
+              <option value="urgent">Urgent</option>
+              <option value="high">High</option>
+              <option value="medium">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+
+          <!-- Category Filter -->
+          <div style="min-width: 140px;">
+            <select id="categoryFilterSelect" class="form-select" style="height: 38px; font-size: 0.875rem; padding: 0.375rem 0.75rem;">
+              <option value="all">Category: All</option>
+              <option value="work">Work</option>
+              <option value="study">Study</option>
+              <option value="personal">Personal</option>
+              <option value="health">Health</option>
+              <option value="finance">Finance</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <!-- Sort Select -->
+          <div style="min-width: 150px;">
+            <select id="sortSelect" class="form-select" style="height: 38px; font-size: 0.875rem; padding: 0.375rem 0.75rem;">
+              <option value="dueDate">Sort: Due Date</option>
+              <option value="priority">Sort: Priority</option>
+              <option value="created">Sort: Created Date</option>
+              <option value="title">Sort: Alphabetical</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Task Render Container (Grid/List) -->
+        <div id="tasksContainer" class="tasks-grid-layout">
+          <div class="skeleton" style="height: 180px;"></div>
+          <div class="skeleton" style="height: 180px;"></div>
+          <div class="skeleton" style="height: 180px;"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add Task Modal -->
+  <div class="modal-backdrop" id="addTaskModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create New Task
+        </h3>
+        <button class="btn btn-icon btn-sm" data-close-modal aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="addTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="taskTitle">Task Title *</label>
+            <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Finish UI/UX prototype presentation" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDesc">Description <span class="optional">Optional</span></label>
+            <textarea id="taskDesc" class="form-textarea" placeholder="Add context, subtasks, or checklist items..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskCategory">Category</label>
+              <select id="taskCategory" class="form-select">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskPriority">Priority</label>
+              <select id="taskPriority" class="form-select">
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskDueDate">Due Date *</label>
+              <input type="date" id="taskDueDate" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskDueTime">Due Time</label>
+              <input type="time" id="taskDueTime" class="form-input" value="17:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDuration">Estimated Duration (Minutes)</label>
+            <input type="number" id="taskDuration" class="form-input" value="45" min="5" step="5" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Task Modal -->
+  <div class="modal-backdrop" id="editTaskModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          Edit Task
+        </h3>
+        <button class="btn btn-icon btn-sm" data-close-modal aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="editTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="editTaskTitle">Task Title *</label>
+            <input type="text" id="editTaskTitle" class="form-input" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="editTaskDesc">Description</label>
+            <textarea id="editTaskDesc" class="form-textarea"></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="editTaskCategory">Category</label>
+              <select id="editTaskCategory" class="form-select">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editTaskPriority">Priority</label>
+              <select id="editTaskPriority" class="form-select">
+                <option value="Urgent">Urgent</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="editTaskDueDate">Due Date *</label>
+              <input type="date" id="editTaskDueDate" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editTaskDueTime">Due Time</label>
+              <input type="time" id="editTaskDueTime" class="form-input" />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="editTaskDuration">Duration (Mins)</label>
+              <input type="number" id="editTaskDuration" class="form-input" min="5" step="5" />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="editTaskStatus">Status</label>
+              <select id="editTaskStatus" class="form-select">
+                <option value="pending">Pending</option>
+                <option value="completed">Completed</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal-backdrop" id="deleteConfirmModal">
+    <div class="modal-container" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--danger); display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          Delete Task?
+        </h3>
+        <button class="btn btn-icon btn-sm" data-close-modal aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p style="color: var(--text-secondary); margin-bottom: 0.75rem;">
+          Are you sure you want to delete this task? This action cannot be undone.
+        </p>
+        <div id="deleteTaskTitlePreview" style="font-weight: 700; color: var(--text-main); font-size: 0.9375rem; background: var(--bg-subtle); padding: 0.75rem 1rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteTaskBtn">Delete Task</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/firebase-service.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/tasks.js"></script>
+</body>
+</html>

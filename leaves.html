@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaves & Attendance — DayFlow</title>
+  <meta name="description" content="DayFlow Enterprise Professional Dashboard — Leave Monitoring, Requests, and Attendance Management." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/leaves.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+  <!-- Canvas for Celebration Confetti -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" id="sidebarBrandLogo" title="DayFlow Homepage">
+          <div class="brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="brand-logo-text">DAYFLOW</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="/" class="nav-item" id="navHome">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home Page</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Workspace</div>
+        <a href="/pages/dashboard.html" class="nav-item" id="navDashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/pages/leaves.html" class="nav-item active" id="navLeaves">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Leaves & Attendance</span>
+          <span class="nav-badge badge-leaves-pending" style="display: none; background: var(--warning); color: #78350F;">0</span>
+        </a>
+        <a href="/pages/tasks.html" class="nav-item" id="navTasks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>My Tasks</span>
+          <span class="nav-badge badge-tasks-count" style="display: none;">0</span>
+        </a>
+        <a href="/pages/calendar.html" class="nav-item" id="navCalendar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar & Events</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Account</div>
+        <a href="/pages/profile.html" class="nav-item" id="navProfile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile & Company Details</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/pages/profile.html" class="user-mini-profile" id="userMiniProfileLink">
+          <div class="user-mini-avatar user-avatar-initials">AM</div>
+          <div class="user-mini-info">
+            <div class="user-mini-name user-name-display">Alex Morgan</div>
+            <div class="user-mini-role user-role-display">Staff Product Designer</div>
+          </div>
+        </a>
+        <div style="display: flex; gap: 0.375rem; margin-top: 0.375rem;">
+          <button type="button" class="btn btn-secondary btn-sm w-full" data-open-modal="switchUserModal" style="font-size: 0.75rem; padding: 0.35rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" title="Switch Between Employees & Single HR">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span>Switch</span>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm logout-btn" id="leavesSidebarLogoutBtn" style="font-size: 0.75rem; padding: 0.35rem 0.6rem; color: var(--danger);" title="Log Out from DayFlow">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle sidebar menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search leave records, policies, team members..." />
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Firebase Cloud Status Badge -->
+          <div class="firebase-sync-badge"></div>
+
+          <!-- User Role Tag -->
+          <div class="user-role-badge-tag"></div>
+
+          <!-- Employee ID & Shift Pill -->
+          <div class="punch-terminal-pill" id="headerShiftPill" title="Current shift & clock-in status">
+            <span class="punch-status-dot" id="shiftStatusDot"></span>
+            <span id="shiftStatusText" style="font-size: 0.8125rem; font-weight: 600; color: var(--text-main);">Working (On Duty)</span>
+          </div>
+
+          <!-- Leave Request Button -->
+          <button class="btn btn-primary btn-sm" data-open-modal="requestLeaveModal" id="headerRequestLeaveBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Apply Leave</span>
+          </button>
+
+          <!-- Theme Toggle -->
+          <button class="btn btn-icon theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+
+          <!-- Header Logout Button -->
+          <button type="button" class="btn btn-secondary btn-sm logout-btn" id="leavesHeaderLogoutBtn" title="Log Out from DayFlow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Page Content -->
+      <main class="page-content" id="leavesMain">
+        <!-- Professional Employee Cockpit Banner -->
+        <section class="employee-cockpit-banner" id="employeeCockpitBanner">
+          <div class="cockpit-profile-left">
+            <div class="cockpit-avatar user-avatar-initials">AM</div>
+            <div class="cockpit-details">
+              <h1>
+                <span class="user-name-display">Alex Morgan</span>
+                <span class="badge-empid user-empid-display">EMP-84092</span>
+              </h1>
+              <div class="cockpit-meta">
+                <span class="cockpit-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                  <span class="user-role-display">Staff Product Designer & Lead</span>
+                </span>
+                <span class="cockpit-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span class="user-dept-display">Product Experience & Design Systems</span>
+                </span>
+                <span class="cockpit-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  Manager: <strong class="user-manager-display" style="margin-left: 0.25rem;">Sarah Chen</strong>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cockpit-actions-right">
+            <button class="btn btn-secondary" data-open-modal="supportTicketModal" id="btnRaiseSupportTicket">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 9a2 2 0 0 1-2 2H6l-4 4V4c0-1.1.9-2 2-2h8a2 2 0 0 1 2 2v5Z"/><path d="M18 9h2a2 2 0 0 1 2 2v11l-4-4h-6a2 2 0 0 1-2-2v-1"/></svg>
+              <span>IT / Company Support</span>
+            </button>
+            <button class="btn btn-primary" data-open-modal="requestLeaveModal" id="btnOpenLeaveModal">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>Request Leave</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Leave Balance Cards (Live Quota Tracker) -->
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+          <div>
+            <h2 style="font-size: 1.25rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em;">Leave Balances & Allowances</h2>
+            <p style="font-size: 0.875rem; color: var(--text-muted);">Annual entitlement cycle: Jan 1, 2026 – Dec 31, 2026</p>
+          </div>
+          <div style="font-size: 0.8125rem; font-weight: 600; color: var(--primary);">
+            Total Available: <strong class="total-available-leaves-count" style="font-size: 1.125rem;">24</strong> days
+          </div>
+        </div>
+
+        <section class="leave-balances-grid" id="leaveBalanceCardsContainer">
+          <!-- Rendered dynamically by leaves.js -->
+        </section>
+
+        <!-- Two Column Main Layout -->
+        <div class="work-hub-grid">
+          <!-- Left Column: Leave Management & History Table -->
+          <div class="hub-main-col">
+            <div class="cockpit-panel">
+              <div class="panel-header-row">
+                <div class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                  <span>Leave Applications & Status Tracking</span>
+                </div>
+                <button class="btn btn-primary btn-sm" data-open-modal="requestLeaveModal">
+                  + New Request
+                </button>
+              </div>
+
+              <!-- Filter Tabs -->
+              <div class="leave-filter-nav" id="leaveFilterNav">
+                <button class="leave-filter-btn active" data-filter="all">All Applications</button>
+                <button class="leave-filter-btn" data-filter="pending">Pending Approval</button>
+                <button class="leave-filter-btn" data-filter="approved">Approved</button>
+                <button class="leave-filter-btn" data-filter="rejected">Rejected</button>
+                <button class="leave-filter-btn" data-filter="cancelled">Cancelled</button>
+              </div>
+
+              <!-- Table Container -->
+              <div class="leave-table-container">
+                <table class="leave-table">
+                  <thead>
+                    <tr>
+                      <th>Ref ID</th>
+                      <th>Leave Type & Reason</th>
+                      <th>Dates</th>
+                      <th>Duration</th>
+                      <th>Handover</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="leaveRequestsTableBody">
+                    <!-- Rendered dynamically by leaves.js -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Company Policies & Guidelines Quick Section -->
+            <div class="cockpit-panel">
+              <div class="panel-header-row">
+                <div class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                  <span>Corporate Leave Policies & Rules</span>
+                </div>
+                <span class="badge-empid" style="font-size: 0.75rem;">HR-POL-2026</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; font-size: 0.875rem;">
+                <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+                  <strong style="color: var(--text-main); display: block; margin-bottom: 0.25rem;">🌴 Annual Paid Leave (AL)</strong>
+                  <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">Requires minimum 3 working days prior notice for planned vacations longer than 2 days. Unused balance can carry forward up to 8 days.</p>
+                </div>
+                <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+                  <strong style="color: var(--text-main); display: block; margin-bottom: 0.25rem;">🩺 Sick & Medical Leave (SL)</strong>
+                  <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">Can be applied on the same day. Medical certificate from a licensed practitioner is required for medical leaves exceeding 2 consecutive days.</p>
+                </div>
+                <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+                  <strong style="color: var(--text-main); display: block; margin-bottom: 0.25rem;">💻 Remote & WFH Policy</strong>
+                  <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">24 flexible remote days allotted annually for deep focus sprints. Please ensure active Slack availability during standard core hours (10 AM - 4 PM PST).</p>
+                </div>
+                <div style="background: var(--bg-subtle); padding: 1rem; border-radius: var(--radius-md);">
+                  <strong style="color: var(--text-main); display: block; margin-bottom: 0.25rem;">⭐ Compensatory Off (Comp Off)</strong>
+                  <p style="color: var(--text-muted); font-size: 0.8125rem; margin: 0;">Earned when supporting approved weekend release deployments or emergency on-call shifts. Valid for 60 days from credit date.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Shift Clock Terminal, Team Out Today & Holidays -->
+          <div class="hub-side-col">
+            <!-- Attendance Terminal Panel -->
+            <div class="cockpit-panel">
+              <div class="panel-header-row">
+                <div class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Attendance & Punch Terminal</span>
+                </div>
+                <span class="badge-empid" style="font-size: 0.75rem;">Shift: 09:00 - 18:00</span>
+              </div>
+
+              <div class="shift-terminal-box">
+                <div class="shift-time-live" id="punchClockDisplay">09:00:00 AM</div>
+                <div class="shift-info-row">
+                  <span>Worked today: <strong id="shiftWorkedDuration" style="color: var(--primary);">03h 30m 15s</strong></span>
+                  <span>Health: <strong style="color: var(--success);">98.5%</strong></span>
+                </div>
+                <div class="shift-button-group">
+                  <button class="btn-punch-in" id="punchInBtn" style="display: none;">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    Punch In
+                  </button>
+                  <button class="btn-punch-out" id="punchOutBtn">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18.36 6.64a9 9 0 1 1-12.73 0"/><line x1="12" y1="2" x2="12" y2="12"/></svg>
+                    Punch Out
+                  </button>
+                  <button class="btn-break" id="lunchBreakBtn" title="Toggle Lunch Break">
+                    🍱 Lunch
+                  </button>
+                  <button class="btn-break" id="teaBreakBtn" title="Toggle Short Break">
+                    ☕ Break
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem;">Recent Attendance Logs</div>
+                <div id="attendanceLogsContainer">
+                  <!-- Rendered dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Team Out of Office Radar -->
+            <div class="cockpit-panel">
+              <div class="panel-header-row">
+                <div class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                  <span>Team Out of Office Today</span>
+                </div>
+              </div>
+              <div class="team-ooo-list" id="teamOooContainer">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+
+            <!-- Upcoming Public & Company Holidays -->
+            <div class="cockpit-panel">
+              <div class="panel-header-row">
+                <div class="panel-title">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span>Upcoming Official Holidays</span>
+                </div>
+              </div>
+              <div class="holiday-list" id="upcomingHolidaysContainer">
+                <!-- Rendered dynamically -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- MODAL 1: Request Leave Submission Modal -->
+  <div class="modal-backdrop" id="requestLeaveModal">
+    <div class="modal-card" style="max-width: 600px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Apply for Employee Leave</h3>
+        <button class="modal-close-btn" data-close-modal="requestLeaveModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="leaveRequestForm">
+        <!-- Leave Type Picker Grid -->
+        <div class="form-group">
+          <label class="form-label">Select Leave Type</label>
+          <div class="leave-type-cards-picker" id="leaveTypeCardsPicker">
+            <div class="leave-type-option" data-type="annual">
+              <div class="leave-type-option-title">Annual Leave</div>
+              <div class="leave-type-option-bal">11 days left</div>
+            </div>
+            <div class="leave-type-option" data-type="sick">
+              <div class="leave-type-option-title">Sick Leave</div>
+              <div class="leave-type-option-bal">8 days left</div>
+            </div>
+            <div class="leave-type-option selected" data-type="casual">
+              <div class="leave-type-option-title">Casual Leave</div>
+              <div class="leave-type-option-bal">5 days left</div>
+            </div>
+            <div class="leave-type-option" data-type="remote">
+              <div class="leave-type-option-title">Remote / WFH</div>
+              <div class="leave-type-option-bal">8 days left</div>
+            </div>
+            <div class="leave-type-option" data-type="compOff">
+              <div class="leave-type-option-title">Comp Off</div>
+              <div class="leave-type-option-bal">2 days left</div>
+            </div>
+            <div class="leave-type-option" data-type="parental">
+              <div class="leave-type-option-title">Parental Leave</div>
+              <div class="leave-type-option-bal">60 days left</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Date Range Selection -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="leaveStartDate">From Date *</label>
+            <input type="date" id="leaveStartDate" class="form-control" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="leaveEndDate">To Date *</label>
+            <input type="date" id="leaveEndDate" class="form-control" required />
+          </div>
+        </div>
+
+        <!-- Half Day Option & Duration Preview -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="leaveHalfDay">Half Day Option</label>
+            <select id="leaveHalfDay" class="form-control">
+              <option value="none">Full Day(s)</option>
+              <option value="first-half">First Half Only (Morning)</option>
+              <option value="second-half">Second Half Only (Afternoon)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Calculated Duration</label>
+            <div class="leave-duration-preview-badge" id="leaveDurationPreview">
+              <span>Duration:</span>
+              <strong style="color: var(--primary);">2 Working Days</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Balance Warning Alert (if any) -->
+        <div id="leaveBalanceWarning" style="display: none; background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 1rem;">
+        </div>
+
+        <!-- Reason -->
+        <div class="form-group">
+          <label class="form-label" for="leaveReason">Reason / Purpose of Leave *</label>
+          <input type="text" id="leaveReason" class="form-control" placeholder="e.g. Family wedding, medical consultation, personal appointment..." required />
+        </div>
+
+        <!-- Handover Colleague & Emergency Phone -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="leaveHandoverColleague">Handover Colleague</label>
+            <select id="leaveHandoverColleague" class="form-control">
+              <option value="Liam Vance (Senior UI Designer)">Liam Vance (Senior UI Designer)</option>
+              <option value="Maya Patel (Product Manager)">Maya Patel (Product Manager)</option>
+              <option value="David Kim (Cloud Architect)">David Kim (Cloud Architect)</option>
+              <option value="Sarah Chen (VP of Product)">Sarah Chen (VP of Product)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="leaveEmergencyContact">Emergency Contact Number</label>
+            <input type="text" id="leaveEmergencyContact" class="form-control" value="+1 (555) 019-2835" />
+          </div>
+        </div>
+
+        <!-- Additional Notes -->
+        <div class="form-group">
+          <label class="form-label" for="leaveAdditionalNotes">Additional Information / Handover Link (Optional)</label>
+          <textarea id="leaveAdditionalNotes" class="form-control" rows="2" placeholder="Link to project handover documents, Jira tickets covered, or travel details..."></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="requestLeaveModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="btnSubmitLeaveRequest">
+            Submit Leave Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 2: Leave Slip & Confirmation View -->
+  <div class="modal-backdrop" id="leaveSlipModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Leave Authorization Slip</h3>
+        <button class="modal-close-btn" data-close-modal="leaveSlipModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="leaveSlipModalBody">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL 3: Raise Company Support / IT Ticket Modal -->
+  <div class="modal-backdrop" id="supportTicketModal">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Raise Corporate Support Ticket</h3>
+        <button class="modal-close-btn" data-close-modal="supportTicketModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="supportTicketForm">
+        <div class="form-group">
+          <label class="form-label" for="ticketCategory">Ticket Category</label>
+          <select id="ticketCategory" class="form-control">
+            <option value="IT & Hardware">IT & Hardware (Monitors, Laptop, Accessories)</option>
+            <option value="HR & Payroll">HR & Payroll (Salary, Leaves, Tax deduction)</option>
+            <option value="Software & VPN">Software Licenses, Cloud Access & VPN</option>
+            <option value="Facilities">Workplace & Facilities (Access Card, Desk, Chair)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ticketSubject">Subject / Issue Summary *</label>
+          <input type="text" id="ticketSubject" class="form-control" placeholder="Brief summary of what you need assistance with..." required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ticketPriority">Priority</label>
+          <select id="ticketPriority" class="form-control">
+            <option value="Low">Low (General Inquiry)</option>
+            <option value="Medium" selected>Medium (Standard Service)</option>
+            <option value="High">High (Work Blocker)</option>
+            <option value="Urgent">Urgent (Critical System Issue)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="ticketDescription">Description Details</label>
+          <textarea id="ticketDescription" class="form-control" rows="3" placeholder="Provide any details to help IT or HR resolve this quickly..."></textarea>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="supportTicketModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Ticket</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL 4: Global Quick Add Task Modal -->
+  <div class="modal-backdrop" id="addTaskModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Create New Task</h3>
+        <button class="modal-close-btn" data-close-modal="addTaskModal" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="addTaskForm">
+        <div class="form-group">
+          <label class="form-label" for="taskTitle">Task Title *</label>
+          <input type="text" id="taskTitle" class="form-control" placeholder="What needs to be done?" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="taskDescription">Description</label>
+          <textarea id="taskDescription" class="form-control" rows="2" placeholder="Add context, sub-tasks, or notes..."></textarea>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="taskCategory">Category</label>
+            <select id="taskCategory" class="form-control">
+              <option value="Work">Work</option>
+              <option value="Study">Study</option>
+              <option value="Personal">Personal</option>
+              <option value="Health">Health</option>
+              <option value="Finance">Finance</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="taskPriority">Priority</label>
+            <select id="taskPriority" class="form-control">
+              <option value="Urgent">Urgent</option>
+              <option value="High" selected>High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div class="form-group">
+            <label class="form-label" for="taskDueDate">Due Date</label>
+            <input type="date" id="taskDueDate" class="form-control" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="taskDueTime">Due Time</label>
+            <input type="time" id="taskDueTime" class="form-control" value="17:00" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal="addTaskModal">Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script type="module" src="/js/firebase-service.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/leaves.js"></script>
+</body>
+</html>
