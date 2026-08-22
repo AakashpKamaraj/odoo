@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login & Access Portal — DayFlow</title>
+  <meta name="description" content="Sign in to your DayFlow workspace. Dedicated portal for the HR Administrator and Employee team members." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/login.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+  <div class="login-viewport" id="loginPage">
+    <!-- Left Hero Branding Area -->
+    <div class="login-hero">
+      <div class="login-hero-header">
+        <a href="/" class="login-hero-brand" id="loginBrandLogo" title="Back to Homepage">
+          <div class="brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span>DAYFLOW</span>
+        </a>
+        <a href="/" class="login-back-link" title="Return to product home">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+          <span>Homepage</span>
+        </a>
+      </div>
+
+      <div class="login-hero-content">
+        <div class="login-hero-tag">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          </svg>
+          Role-Based Access Control
+        </div>
+        <h1 class="login-hero-title">One HR Admin.<br/>Unified Employees.</h1>
+        <p class="login-hero-desc">
+          DayFlow strictly enforces a single designated HR Director portal for company-wide leave approvals and quota governance, alongside seamless multi-user access for all team members.
+        </p>
+
+        <div class="login-feature-list">
+          <div class="login-feature-item">
+            <div class="login-feature-icon" style="background: rgba(124, 58, 237, 0.3); color: #C4B5FD;">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+            </div>
+            <span><strong>Single HR Portal:</strong> Full leave approval authority & team quota audit</span>
+          </div>
+          <div class="login-feature-item">
+            <div class="login-feature-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+            </div>
+            <span><strong>Multi-User Employees:</strong> Personal agenda, focus timers & leave requests</span>
+          </div>
+          <div class="login-feature-item">
+            <div class="login-feature-icon">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <span><strong>Live Attendance & Clock:</strong> Shift punches, work hours & breaks</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="login-hero-footer">
+        <div class="login-policy-pill">
+          <span class="pulse-dot"></span>
+          <span>Single HR Security Rule Active</span>
+        </div>
+        <span>© 2026 DayFlow Inc.</span>
+      </div>
+    </div>
+
+    <!-- Right Login Form Area -->
+    <div class="login-form-area">
+      <div class="login-card-wrapper">
+        
+        <div class="login-card-header">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; margin-bottom: 0.35rem;">
+            <h2 id="loginMainHeading">Sign in to DayFlow</h2>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <div class="firebase-sync-badge"></div>
+              <span id="resolvedRoleBadge" class="badge badge-primary" style="font-size: 0.75rem; font-weight: 700;">Employee Access</span>
+            </div>
+          </div>
+          <p id="loginMainSubheading">Choose your account type below or enter your enterprise credentials.</p>
+        </div>
+
+        <!-- Top Portal Mode Tabs: Sign In vs Add / Register Employee -->
+        <div style="display: grid; grid-template-columns: 1fr 1fr; background: var(--bg-subtle); padding: 0.25rem; border-radius: var(--radius-md); border: 1px solid var(--border-subtle); margin-bottom: 1.25rem;">
+          <button type="button" class="btn btn-sm portal-mode-tab active" id="btnModeSignIn" style="border-radius: var(--radius-sm); font-weight: 700; font-size: 0.8125rem; justify-content: center; background: var(--bg-surface); color: var(--primary); box-shadow: var(--shadow-xs);">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+            <span>Sign In</span>
+          </button>
+          <button type="button" class="btn btn-sm portal-mode-tab" id="btnModeRegister" style="border-radius: var(--radius-sm); font-weight: 700; font-size: 0.8125rem; justify-content: center; color: var(--text-muted); background: transparent;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+            <span>+ Add Employee Account</span>
+          </button>
+        </div>
+
+        <!-- NEWLY CREATED ACCOUNT HIGHLIGHT BANNER -->
+        <div id="newAccountCreatedBanner" style="display: none; background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(79, 70, 229, 0.08) 100%); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: var(--radius-md); padding: 1rem; margin-bottom: 1.25rem; animation: fadeInDown 0.3s ease-out;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 0.75rem;">
+            <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+              <div style="width: 36px; height: 36px; border-radius: 50%; background: #10B981; color: #FFFFFF; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-weight: 800;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div>
+                <div style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: #047857; margin-bottom: 0.15rem;">
+                  Account Created Successfully!
+                </div>
+                <div style="font-size: 0.9375rem; font-weight: 800; color: var(--text-main);" id="newCreatedEmpName">
+                  Employee Name
+                </div>
+                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; margin-top: 0.35rem; font-size: 0.8125rem;">
+                  <span style="background: var(--bg-surface); padding: 0.2rem 0.625rem; border-radius: var(--radius-pill); border: 1px solid rgba(16, 185, 129, 0.3); font-weight: 800; color: var(--primary); font-family: monospace;" id="newCreatedEmpIdBadge">
+                    ID: EMP-00000
+                  </span>
+                  <span style="color: var(--text-secondary); font-size: 0.8125rem;" id="newCreatedEmpEmail">
+                    email@dayflow.corp
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button type="button" id="dismissNewAccountBanner" style="background: none; border: none; font-size: 1.25rem; color: var(--text-muted); cursor: pointer; line-height: 1; padding: 0.25rem;" aria-label="Dismiss banner">&times;</button>
+          </div>
+        </div>
+
+        <!-- CONTAINER 1: SIGN IN VIEW -->
+        <div id="signInContainer">
+          <!-- Role Switcher Tabs -->
+          <div class="role-tabs-container" id="roleTabs">
+            <button type="button" class="role-tab active" id="tabEmployee" data-target="employee">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+              <span>Multiple Users (Employees)</span>
+            </button>
+            <button type="button" class="role-tab" id="tabHR" data-target="hr">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>Single HR Admin (Only 1)</span>
+            </button>
+          </div>
+
+          <!-- HR EXCLUSIVE CARD (Shown when HR Tab selected or for quick click) -->
+          <div class="hr-exclusive-card" id="hrQuickCard" style="display: none;">
+            <div class="hr-card-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              <span>Designated HR Partner (Exclusive)</span>
+            </div>
+            <div class="hr-profile-header">
+              <div class="hr-avatar">JT</div>
+              <div class="hr-details">
+                <div class="hr-name">Jessica Taylor</div>
+                <div class="hr-title">Head of People Operations & HR Director</div>
+                <div class="hr-meta"><span>ID: HR-001</span> • <span>hr@dayflow.corp</span></div>
+              </div>
+            </div>
+            <p class="hr-desc">
+              As the single authorized HR, Jessica holds exclusive privileges to oversee all employee records, audit company-wide salary slips, and manage leave quotas.
+            </p>
+            <div class="hr-actions">
+              <button type="button" class="btn btn-primary btn-sm w-full" id="btnQuickLoginHR">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <span>1-Click Sign In as HR Director</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- EMPLOYEE QUICK DIRECTORY (Shown when Employee Tab selected) -->
+          <div class="employee-directory-box" id="employeeQuickDirectory">
+            <div class="employee-directory-header">
+              <span>Select an employee profile:</span>
+              <button type="button" id="btnSwitchToRegisterLink" style="font-size: 0.75rem; color: var(--primary); font-weight: 700; background: none; border: none; cursor: pointer; padding: 0;">+ Add New Employee</button>
+            </div>
+            <div class="employee-cards-grid" id="employeeCardsGrid">
+              <!-- Populated via JavaScript -->
+            </div>
+          </div>
+
+          <!-- STANDARD CREDENTIALS FORM -->
+          <form class="login-form" id="loginForm" novalidate>
+            <!-- Email Field -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <label class="form-label" for="loginEmail" style="margin-bottom: 0;">Enterprise Email Address</label>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                  <span id="selectedEmpIdBadge" class="badge" style="font-family: monospace; font-size: 0.6875rem; font-weight: 800; background: rgba(79, 70, 229, 0.12); color: var(--primary); padding: 0.15rem 0.5rem; display: none;">ID: EMP-00000</span>
+                  <span id="roleNoticeTag" style="font-size: 0.6875rem; font-weight: 700; color: var(--primary);"></span>
+                </div>
+              </div>
+              <div class="input-with-icon">
+                <div class="input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                </div>
+                <input 
+                  type="email" 
+                  id="loginEmail" 
+                  class="form-input" 
+                  placeholder="e.g. alex.morgan@dayflow.corp or hr@dayflow.corp" 
+                  autocomplete="email"
+                  required
+                />
+              </div>
+              <div class="form-feedback error" id="emailFeedback" style="display: none;"></div>
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.25rem;">
+                <label class="form-label" for="loginPassword" style="margin-bottom: 0;">Password</label>
+                <span style="font-size: 0.6875rem; color: var(--text-muted);">Demo: any 4+ chars or autofill</span>
+              </div>
+              <div class="input-with-icon">
+                <div class="input-icon">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                </div>
+                <input 
+                  type="password" 
+                  id="loginPassword" 
+                  class="form-input" 
+                  placeholder="••••••••" 
+                  autocomplete="current-password"
+                  required
+                />
+                <button type="button" class="input-toggle-icon" id="togglePasswordBtn" aria-label="Toggle password visibility">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+              <div class="form-feedback error" id="passwordFeedback" style="display: none;"></div>
+            </div>
+
+            <!-- Form Options -->
+            <div class="form-options">
+              <label class="custom-checkbox" for="rememberMeCheckbox">
+                <input type="checkbox" id="rememberMeCheckbox" />
+                <span>Remember this account</span>
+              </label>
+              <a href="#" class="forgot-password-link" id="fillDemoCredentialsLink">Autofill Password</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary btn-lg w-full mt-2" id="loginSubmitBtn">
+              <span id="submitBtnText">Sign In to Workspace</span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <!-- CONTAINER 2: ADD / REGISTER EMPLOYEE FORM (Shown when + Add Employee Tab is active) -->
+        <div id="registerContainer" style="display: none;">
+          <div style="background: rgba(79, 70, 229, 0.06); border: 1px solid rgba(79, 70, 229, 0.2); border-radius: var(--radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem; font-weight: 700; color: var(--primary); font-size: 0.875rem; margin-bottom: 0.25rem;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              <span>Employee Onboarding & Account Registration</span>
+            </div>
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin: 0;">
+              Register a new employee account. This automatically provisions their custom salary breakdown, leave quotas, and employee dashboard.
+            </p>
+          </div>
+
+          <form id="registerForm" novalidate>
+            <!-- Name & Email -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label class="form-label" for="regFullName">Full Legal Name *</label>
+                <input type="text" id="regFullName" class="form-input" placeholder="e.g. Rachel Adams" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regEmail">Work Email *</label>
+                <input type="email" id="regEmail" class="form-input" placeholder="e.g. rachel.adams@dayflow.corp" required />
+              </div>
+            </div>
+
+            <!-- Role & Department -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label class="form-label" for="regRole">Job Title / Designation *</label>
+                <input type="text" id="regRole" class="form-input" placeholder="e.g. Senior Data Engineer" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regDepartment">Department *</label>
+                <select id="regDepartment" class="form-input" style="padding-right: 2rem;">
+                  <option value="Product Experience & Design Systems">Product Experience & Design</option>
+                  <option value="Frontend Platform & Web Performance">Frontend Platform & Engineering</option>
+                  <option value="Infrastructure & Platform Security">Cloud Infra & DevOps</option>
+                  <option value="Product Strategy & Growth">Product Strategy & PM</option>
+                  <option value="People Operations & HR">People Operations & HR</option>
+                  <option value="Finance & Operations">Finance & Legal</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Auto-generated Employee ID & Joining Date -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label class="form-label" for="regEmpId">Employee ID (Generated)</label>
+                <input type="text" id="regEmpId" class="form-input" style="font-family: monospace; font-weight: 700; color: var(--primary);" readonly />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regJoiningDate">Date of Joining</label>
+                <input type="date" id="regJoiningDate" class="form-input" />
+              </div>
+            </div>
+
+            <!-- Compensation & Salary Configuration -->
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                <span style="font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-main);">Compensation & Salary Setup</span>
+                <span class="badge" style="background: rgba(16, 185, 129, 0.15); color: #047857; font-size: 0.6875rem; font-weight: 700;">Live Payroll Engine</span>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                <div class="form-group" style="margin-bottom: 0.5rem;">
+                  <label class="form-label" for="regAnnualCTC">Annual CTC / Salary (USD) *</label>
+                  <input type="number" id="regAnnualCTC" class="form-input" value="120000" min="20000" step="5000" required />
+                </div>
+                <div class="form-group" style="margin-bottom: 0.5rem;">
+                  <label class="form-label" for="regBankName">Disbursement Bank</label>
+                  <input type="text" id="regBankName" class="form-input" value="JPMorgan Chase Bank, N.A." />
+                </div>
+              </div>
+
+              <!-- Live Salary Preview Badge -->
+              <div id="regSalaryPreview" style="display: flex; align-items: center; justify-content: space-between; background: var(--bg-surface); padding: 0.5rem 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle); font-size: 0.75rem; margin-top: 0.25rem;">
+                <div>Monthly Gross: <strong style="color: var(--primary);">$10,000</strong></div>
+                <div>Est. Net Take-Home: <strong style="color: var(--success);">$8,050 / mo</strong></div>
+              </div>
+            </div>
+
+            <!-- Password & Confirm -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+              <div class="form-group">
+                <label class="form-label" for="regPassword">Create Password *</label>
+                <input type="password" id="regPassword" class="form-input" placeholder="At least 4 chars" value="welcome123" required />
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regConfirmPassword">Confirm Password *</label>
+                <input type="password" id="regConfirmPassword" class="form-input" placeholder="Repeat password" value="welcome123" required />
+              </div>
+            </div>
+
+            <div class="form-feedback error" id="regFeedback" style="display: none; margin-bottom: 0.75rem;"></div>
+
+            <!-- Submit Registration -->
+            <button type="submit" class="btn btn-primary btn-lg w-full" id="btnSubmitRegister">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
+              <span>Register & Enter Employee Dashboard</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- Access Policy Card -->
+        <div class="enterprise-policy-card">
+          <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color: var(--primary); flex-shrink: 0; margin-top: 2px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.45;">
+              <strong>Enterprise RBAC Notice:</strong> Multiple employee users are supported for task planning & attendance. Only the single verified account (<strong>hr@dayflow.corp</strong>) can log in with HR Admin privileges.
+            </div>
+          </div>
+        </div>
+
+        <div class="login-card-footer">
+          Need assistance with your enterprise credentials? <a href="#" onclick="DayFlow.toast('IT Support Desk', 'Single HR: hr@dayflow.corp / hr123 • Employee: alex.morgan@dayflow.corp / alex123', 'info'); return false;">View Help Directory</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Modals & Scripts -->
+  <script src="/js/main.js"></script>
+  <script src="/js/login.js"></script>
+</body>
+</html>

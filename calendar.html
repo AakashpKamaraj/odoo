@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calendar — DayFlow</title>
+  <meta name="description" content="DayFlow Calendar — Schedule your days and track deadlines." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+  <style>
+    /* Calendar Page Specific Layout */
+    .calendar-view-grid {
+      display: grid;
+      grid-template-columns: 2.2fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .calendar-main-card {
+      padding: 1.5rem;
+    }
+
+    .calendar-header-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .calendar-nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .calendar-grid-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .calendar-days-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      border-left: 1px solid var(--border-subtle);
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .calendar-day-cell {
+      min-height: 95px;
+      padding: 0.5rem;
+      border-right: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      background-color: var(--bg-surface);
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      transition: background-color var(--transition-fast);
+      position: relative;
+    }
+
+    .calendar-day-cell:hover {
+      background-color: var(--bg-surface-hover);
+    }
+
+    .calendar-day-cell.prev-month-cell,
+    .calendar-day-cell.next-month-cell {
+      background-color: var(--bg-subtle);
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    .calendar-cell-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .calendar-day-number {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      width: 24px;
+      height: 24px;
+      border-radius: var(--radius-pill);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-main);
+    }
+
+    .calendar-day-cell.is-today .calendar-day-number {
+      background-color: var(--primary);
+      color: #FFFFFF;
+    }
+
+    .calendar-day-cell.is-selected {
+      box-shadow: inset 0 0 0 2px var(--primary);
+      background-color: var(--primary-light);
+    }
+
+    .calendar-pending-badge {
+      font-size: 0.6875rem;
+      font-weight: 800;
+      color: var(--primary);
+      background-color: var(--primary-light);
+      padding: 0.125rem 0.375rem;
+      border-radius: var(--radius-pill);
+    }
+
+    .calendar-tasks-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      margin-top: 0.25rem;
+    }
+
+    .calendar-task-tag {
+      font-size: 0.6875rem;
+      font-weight: 600;
+      padding: 0.1875rem 0.375rem;
+      border-radius: 4px;
+      background-color: var(--bg-subtle);
+      color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.2;
+      border-left: 3px solid var(--primary);
+    }
+
+    .calendar-task-tag.priority-urgent { border-left-color: var(--danger); background-color: var(--danger-light); color: var(--danger-dark); }
+    .calendar-task-tag.priority-high { border-left-color: #F97316; background-color: #FFF7ED; color: #9A3412; }
+    .calendar-task-tag.priority-medium { border-left-color: #3B82F6; }
+    .calendar-task-tag.completed { opacity: 0.55; text-decoration: line-through; border-left-color: var(--success); }
+
+    .calendar-more-pill {
+      font-size: 0.6875rem;
+      color: var(--text-muted);
+      font-weight: 700;
+      padding-left: 0.25rem;
+    }
+
+    .cal-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+    .cal-dot.active { background-color: var(--primary); }
+    .cal-dot.done { background-color: var(--success); }
+
+    @media (max-width: 1024px) {
+      .calendar-view-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Canvas for Celebration -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" title="DayFlow Homepage">
+          <div class="brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="brand-logo-text">DAYFLOW</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="/" class="nav-item" id="navHome">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home Page</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Workspace</div>
+        <a href="/pages/dashboard.html" class="nav-item" id="navDashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/pages/leaves.html" class="nav-item" id="navLeaves">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Leaves & Attendance</span>
+        </a>
+        <a href="/pages/tasks.html" class="nav-item" id="navTasks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>My Tasks</span>
+          <span class="nav-badge badge-tasks-count" style="display: none;">0</span>
+        </a>
+        <a href="/pages/calendar.html" class="nav-item active" id="navCalendar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Account</div>
+        <a href="/pages/profile.html" class="nav-item" id="navProfile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile & Badges</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/pages/profile.html" class="user-mini-profile">
+          <div class="user-mini-avatar user-avatar-initials">AM</div>
+          <div class="user-mini-info">
+            <div class="user-mini-name user-name-display">Alex Morgan</div>
+            <div class="user-mini-role user-role-display">Senior Product Designer</div>
+          </div>
+        </a>
+        <div style="display: flex; gap: 0.375rem; margin-top: 0.375rem;">
+          <button type="button" class="btn btn-secondary btn-sm w-full" data-open-modal="switchUserModal" style="font-size: 0.75rem; padding: 0.35rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" title="Switch Between Employees & Single HR">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span>Switch</span>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm logout-btn" id="calendarSidebarLogoutBtn" style="font-size: 0.75rem; padding: 0.35rem 0.6rem; color: var(--danger);" title="Log Out from DayFlow">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle sidebar menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search tasks, categories..." />
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Firebase Cloud Status Badge -->
+          <div class="firebase-sync-badge"></div>
+
+          <!-- User Role Tag -->
+          <div class="user-role-badge-tag"></div>
+
+          <div class="streak-pill">
+            <span>🔥</span>
+            <span class="user-streak-count">7 day streak</span>
+          </div>
+
+          <button class="btn btn-primary btn-sm" data-open-modal="addTaskModal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Add Task</span>
+          </button>
+
+          <button class="btn btn-icon theme-toggle-btn" aria-label="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+
+          <!-- Header Logout Button -->
+          <button type="button" class="btn btn-secondary btn-sm logout-btn" id="calendarHeaderLogoutBtn" title="Log Out from DayFlow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Calendar Page Body -->
+      <main class="page-content" id="calendarPageMain">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div class="page-header-row">
+            <div>
+              <h1 class="page-title">Calendar</h1>
+              <p class="page-subtitle">Visual month planning, task allocations, and daily agendas.</p>
+            </div>
+            <button class="btn btn-primary" data-open-modal="addTaskModal">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Schedule Task</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Two Column Calendar Grid Layout -->
+        <div class="calendar-view-grid">
+          <!-- Main Monthly Calendar Card -->
+          <div class="card calendar-main-card">
+            <!-- Calendar Navigation Toolbar -->
+            <div class="calendar-header-toolbar">
+              <h2 id="calendarMonthYear" style="font-size: 1.375rem; font-weight: 800;">August 2026</h2>
+              
+              <div class="calendar-nav-buttons">
+                <button class="btn btn-secondary btn-sm" id="todayCalendarBtn">Today</button>
+                <button class="btn btn-icon btn-sm" id="prevMonthBtn" aria-label="Previous Month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="btn btn-icon btn-sm" id="nextMonthBtn" aria-label="Next Month">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Days of Week Header -->
+            <div class="calendar-grid-header">
+              <span>SUN</span>
+              <span>MON</span>
+              <span>TUE</span>
+              <span>WED</span>
+              <span>THU</span>
+              <span>FRI</span>
+              <span>SAT</span>
+            </div>
+
+            <!-- 7x5 Days Grid -->
+            <div class="calendar-days-grid" id="calendarDaysGrid">
+              <!-- Dynamically rendered via calendar.js -->
+            </div>
+          </div>
+
+          <!-- Right Column: Selected Date Agenda -->
+          <div class="card" id="selectedDateAgendaCard" style="display: flex; flex-direction: column;">
+            <div class="card-header" style="margin-bottom: 0.75rem;">
+              <div>
+                <h3 class="card-title" style="font-size: 1.0625rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  Day Agenda
+                </h3>
+                <p class="card-subtitle" id="agendaSelectedDateTitle">Today</p>
+              </div>
+            </div>
+
+            <!-- Tasks list for selected day -->
+            <div class="task-list-section" id="agendaTasksContainer" style="flex: 1; overflow-y: auto;">
+              <!-- Dynamically populated -->
+            </div>
+
+            <div style="margin-top: 1.25rem; border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+              <button class="btn btn-outline btn-sm w-full" id="addAgendaTaskBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Add Task to this Date</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable Add Task Modal -->
+  <div class="modal-backdrop" id="addTaskModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create New Task
+        </h3>
+        <button class="btn btn-icon btn-sm" data-close-modal aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="addTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="taskTitle">Task Title *</label>
+            <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Finish UI/UX prototype presentation" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDesc">Description <span class="optional">Optional</span></label>
+            <textarea id="taskDesc" class="form-textarea" placeholder="Add context, subtasks, or checklist items..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskCategory">Category</label>
+              <select id="taskCategory" class="form-select">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskPriority">Priority</label>
+              <select id="taskPriority" class="form-select">
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskDueDate">Due Date *</label>
+              <input type="date" id="taskDueDate" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskDueTime">Due Time</label>
+              <input type="time" id="taskDueTime" class="form-input" value="17:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDuration">Estimated Duration (Minutes)</label>
+            <input type="number" id="taskDuration" class="form-input" value="45" min="5" step="5" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script type="module" src="/js/firebase-service.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/calendar.js"></script>
+</body>
+</html>

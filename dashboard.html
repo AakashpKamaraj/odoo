@@ -1,0 +1,1052 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — DayFlow</title>
+  <meta name="description" content="DayFlow Dashboard — Plan your day and focus on what matters." />
+  <link rel="stylesheet" href="/css/style.css" />
+  <link rel="stylesheet" href="/css/dashboard.css" />
+  <link rel="stylesheet" href="/css/leaves.css" />
+  <link rel="stylesheet" href="/css/responsive.css" />
+</head>
+<body>
+  <!-- Canvas for Celebration -->
+  <canvas id="confettiCanvas"></canvas>
+
+  <div class="app-container">
+    <!-- Sidebar Navigation -->
+    <aside class="app-sidebar" id="appSidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand-logo" id="sidebarBrandLogo" title="DayFlow Homepage">
+          <div class="brand-logo-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+            </svg>
+          </div>
+          <span class="brand-logo-text">DAYFLOW</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-title">Navigation</div>
+        <a href="/" class="nav-item" id="navHome">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span>Home Page</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Workspace</div>
+        <a href="/pages/dashboard.html" class="nav-item active" id="navDashboard">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a href="/pages/leaves.html" class="nav-item" id="navLeaves">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          <span>Leaves & Attendance</span>
+        </a>
+        <a href="/pages/tasks.html" class="nav-item" id="navTasks">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+          <span>My Tasks</span>
+          <span class="nav-badge badge-tasks-count" style="display: none;">0</span>
+        </a>
+        <a href="/pages/calendar.html" class="nav-item" id="navCalendar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          <span>Calendar</span>
+        </a>
+
+        <div class="nav-section-title" style="margin-top: 1rem;">Account</div>
+        <a href="/pages/profile.html" class="nav-item" id="navProfile">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span>Profile & Badges</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="/pages/profile.html" class="user-mini-profile" id="userMiniProfileLink">
+          <div class="user-mini-avatar user-avatar-initials">AM</div>
+          <div class="user-mini-info">
+            <div class="user-mini-name user-name-display">Alex Morgan</div>
+            <div class="user-mini-role user-role-display">Senior Product Designer</div>
+          </div>
+        </a>
+        <div style="display: flex; gap: 0.375rem; margin-top: 0.375rem;">
+          <button type="button" class="btn btn-secondary btn-sm w-full" data-open-modal="switchUserModal" style="font-size: 0.75rem; padding: 0.35rem 0.5rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;" title="Switch Between Employees & Single HR">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 3h5v5M4 20L20.2 3.8M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+            <span>Switch</span>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm logout-btn" id="sidebarLogoutBtn" style="font-size: 0.75rem; padding: 0.35rem 0.6rem; color: var(--danger);" title="Log Out from DayFlow">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Logout</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="app-main">
+      <!-- Top Application Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle sidebar menu">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+          </button>
+          <div class="header-search">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="globalSearchInput" placeholder="Search tasks, categories... (Press Enter)" />
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Firebase Cloud Status Badge -->
+          <div class="firebase-sync-badge"></div>
+
+          <!-- User Role Tag -->
+          <div class="user-role-badge-tag"></div>
+
+          <!-- Streak Pill -->
+          <div class="streak-pill" id="headerStreakPill">
+            <span>🔥</span>
+            <span class="user-streak-count">7 day streak</span>
+          </div>
+
+          <!-- Quick Add Task Header Button -->
+          <button class="btn btn-primary btn-sm" data-open-modal="addTaskModal" id="headerAddTaskBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>+ Add Task</span>
+          </button>
+
+          <!-- Theme Toggle Button -->
+          <button class="btn btn-icon theme-toggle-btn" id="themeToggleBtn" aria-label="Toggle theme">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+          </button>
+
+          <!-- Header Logout Button -->
+          <button type="button" class="btn btn-secondary btn-sm logout-btn" id="headerLogoutBtn" title="Log Out from DayFlow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- Main Dashboard Page Body -->
+      <main class="page-content" id="dashboardMain">
+        <!-- Greeting Banner -->
+        <section class="dashboard-hero" id="dashboardHeroBanner">
+          <div class="hero-text-content">
+            <div class="hero-date-badge">
+              <span class="badge-empid user-empid-display">EMP-84092</span>
+              <span id="dashboardDate">Today</span>
+              <span>•</span>
+              <span class="user-dept-display">Product Experience & Design</span>
+            </div>
+            <h1 class="hero-greeting" id="dashboardGreeting">Good morning, Alex 👋</h1>
+            <p class="hero-microcopy" id="dashboardMicrocopy">Plan your day. Focus on what matters.</p>
+          </div>
+          <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="/pages/leaves.html" class="btn btn-secondary btn-sm" id="dashHeroLeavesBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              <span>Leave & Attendance</span>
+            </a>
+            <button class="btn btn-primary btn-sm" data-open-modal="addTaskModal" id="dashHeroAddTaskBtn">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <span>+ Add Task</span>
+            </button>
+          </div>
+        </section>
+
+        <!-- Check In / Check Out & Shift Terminal Card -->
+        <section class="card dashboard-terminal-card" id="dashboardAttendanceTerminalCard" style="margin-bottom: 1.5rem; background: linear-gradient(135deg, var(--bg-surface) 0%, var(--bg-subtle) 100%); border: 1.5px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; padding: 1.25rem;">
+            <!-- Left: Terminal Branding & Real-time Clock -->
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div style="width: 48px; height: 48px; border-radius: var(--radius-md); background: rgba(79, 70, 229, 0.12); color: var(--primary); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <div>
+                <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                  <span style="font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Daily Shift Terminal</span>
+                  <span id="dashShiftStatusBadge" class="badge" style="font-size: 0.6875rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 9999px; background: rgba(100, 116, 139, 0.12); color: var(--text-muted);">
+                    <span id="dashShiftStatusDot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #94a3b8; margin-right: 4px;"></span>
+                    <span id="dashShiftStatusText">Off Shift (Not Checked In)</span>
+                  </span>
+                </div>
+                <div style="display: flex; align-items: baseline; gap: 0.75rem; margin-top: 0.2rem;">
+                  <span id="dashPunchLiveClock" style="font-family: 'JetBrains Mono', monospace, ui-monospace, sans-serif; font-size: 1.5rem; font-weight: 800; color: var(--text-main); letter-spacing: -0.02em;">09:00:00 AM</span>
+                  <span id="dashShiftElapsedTimer" style="font-size: 0.8125rem; font-weight: 600; color: var(--primary); display: none;">• Elapsed: 0h 00m</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right: Check In / Check Out Action Buttons -->
+            <div style="display: flex; align-items: center; gap: 0.625rem; flex-wrap: wrap;">
+              <!-- Check In Button -->
+              <button type="button" id="dashPunchInBtn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.125rem; font-weight: 700; font-size: 0.875rem; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+                <span>Check In / Punch In</span>
+              </button>
+
+              <!-- Check Out Button -->
+              <button type="button" id="dashPunchOutBtn" class="btn btn-secondary" style="display: flex; align-items: center; gap: 0.5rem; padding: 0.6rem 1.125rem; font-weight: 700; font-size: 0.875rem;" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                <span>Check Out / Punch Out</span>
+              </button>
+
+              <!-- Lunch Break Toggle -->
+              <button type="button" id="dashLunchBreakBtn" class="btn btn-outline btn-sm" style="display: none; align-items: center; gap: 0.35rem; font-size: 0.75rem;">
+                <span>🍽️ Lunch Break</span>
+              </button>
+
+              <!-- Tea Break Toggle -->
+              <button type="button" id="dashTeaBreakBtn" class="btn btn-outline btn-sm" style="display: none; align-items: center; gap: 0.35rem; font-size: 0.75rem;">
+                <span>☕ Tea Break</span>
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- Metric Overview Cards (4 Grid) -->
+        <section class="metrics-grid" id="metricsOverviewGrid">
+          <!-- Card 1: Today's Tasks -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-today">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+              </div>
+              <span class="metric-trend up">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="18 15 12 9 6 15"/></svg>
+                Today
+              </span>
+            </div>
+            <div>
+              <div class="metric-value" id="metricTodayCount">0</div>
+              <div class="metric-label">Tasks Scheduled</div>
+            </div>
+          </div>
+
+          <!-- Card 2: Completed -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-completed">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <span class="metric-trend up">Finished</span>
+            </div>
+            <div>
+              <div class="metric-value" id="metricCompletedCount">0</div>
+              <div class="metric-label">Completed</div>
+            </div>
+          </div>
+
+          <!-- Card 3: Pending -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-pending">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <span class="metric-trend neutral">In Progress</span>
+            </div>
+            <div>
+              <div class="metric-value" id="metricPendingCount">0</div>
+              <div class="metric-label">Pending Today</div>
+            </div>
+          </div>
+
+          <!-- Card 4: Overdue -->
+          <div class="metric-card">
+            <div class="metric-card-top">
+              <div class="metric-icon-box metric-icon-overdue">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </div>
+              <span class="metric-trend down">Requires Action</span>
+            </div>
+            <div>
+              <div class="metric-value" id="metricOverdueCount">0</div>
+              <div class="metric-label">Overdue Tasks</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Featured Focus Card -->
+        <section id="focusCardContainer" style="margin-bottom: 2rem;"></section>
+
+        <!-- Two Column Main Grid -->
+        <div class="dashboard-main-grid">
+          <!-- Left Column: Today's Tasks & Upcoming -->
+          <div class="dashboard-left-col">
+            <!-- Today's Tasks Card -->
+            <div class="card" id="todayTasksCard">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    Today's Priority Agenda
+                  </h3>
+                  <p class="card-subtitle">Complete tasks in order of importance</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                  <button class="btn btn-ghost btn-sm active-filter today-filter-btn" data-filter="all">All</button>
+                  <button class="btn btn-ghost btn-sm today-filter-btn" data-filter="pending">Pending</button>
+                  <button class="btn btn-ghost btn-sm today-filter-btn" data-filter="completed">Done</button>
+                </div>
+              </div>
+
+              <!-- List of tasks scheduled for today -->
+              <div class="task-list-section" id="todayTasksList">
+                <div class="skeleton" style="height: 54px; margin-bottom: 0.5rem;"></div>
+                <div class="skeleton" style="height: 54px; margin-bottom: 0.5rem;"></div>
+              </div>
+
+              <!-- Inline Quick Add Input -->
+              <div class="quick-add-box">
+                <input 
+                  type="text" 
+                  class="quick-add-input" 
+                  id="quickAddDashboardInput" 
+                  placeholder="+ Quick add a task for today (Press Enter)..." 
+                />
+                <button class="btn btn-secondary btn-sm" id="quickAddDashboardBtn">Add</button>
+              </div>
+            </div>
+
+            <!-- Upcoming Tasks Card -->
+            <div class="card" id="upcomingTasksCard">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    Upcoming Deadlines
+                  </h3>
+                  <p class="card-subtitle">Milestones scheduled over the next few days</p>
+                </div>
+                <a href="/pages/calendar.html" class="btn btn-ghost btn-sm">Calendar →</a>
+              </div>
+              <div class="task-list-section" id="upcomingTasksList"></div>
+            </div>
+          </div>
+
+          <!-- Right Column: Focus Timer & Productivity Stats -->
+          <div class="dashboard-right-col">
+            <!-- Focus Pomodoro Timer Widget -->
+            <div class="card" id="focusTimerCard">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg>
+                    Focus Session
+                  </h3>
+                  <p class="card-subtitle">Pomodoro deep work intervals</p>
+                </div>
+                <span class="badge badge-primary">Pomodoro</span>
+              </div>
+
+              <!-- Timer Mode Pill Switcher -->
+              <div style="display: flex; justify-content: center; gap: 0.375rem; margin-bottom: 1rem;">
+                <button class="btn btn-xs timer-mode-btn active" data-mode="pomodoro" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 700; border-radius: var(--radius-pill);">25m Focus</button>
+                <button class="btn btn-xs timer-mode-btn" data-mode="shortBreak" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 700; border-radius: var(--radius-pill);">5m Break</button>
+                <button class="btn btn-xs timer-mode-btn" data-mode="longBreak" style="padding: 0.25rem 0.625rem; font-size: 0.75rem; font-weight: 700; border-radius: var(--radius-pill);">15m Long</button>
+              </div>
+
+              <!-- Circular Timer Countdown Display -->
+              <div class="focus-timer-ring">
+                <svg class="timer-svg" viewBox="0 0 180 180">
+                  <circle class="timer-circle-bg" cx="90" cy="90" r="76" />
+                  <circle class="timer-circle-progress" id="timerCircleProgress" cx="90" cy="90" r="76" />
+                </svg>
+                <div class="timer-time-display">
+                  <div class="timer-clock" id="timerClockDisplay">25:00</div>
+                  <div class="timer-mode-label" id="timerModeLabel">Deep Focus</div>
+                </div>
+              </div>
+
+              <!-- Timer Controls -->
+              <div style="display: flex; align-items: center; justify-content: center; gap: 0.75rem;">
+                <button class="btn btn-primary" id="timerStartBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                  <span>Start Focus</span>
+                </button>
+                <button class="btn btn-danger" id="timerPauseBtn" style="display: none;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                  <span>Pause</span>
+                </button>
+                <button class="btn btn-secondary" id="timerResetBtn">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                  <span>Reset</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Productivity Statistics Card -->
+            <div class="card" id="productivityCard">
+              <div class="card-header">
+                <div>
+                  <h3 class="card-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                    Productivity Score
+                  </h3>
+                  <p class="card-subtitle">Daily completion & weekly cadence</p>
+                </div>
+              </div>
+
+              <div class="productivity-stats-wrap">
+                <div class="score-circle-container">
+                  <svg class="score-circle-svg" viewBox="0 0 90 90">
+                    <circle class="score-circle-bg" cx="45" cy="45" r="38" />
+                    <circle class="score-circle-val" id="scoreCircleProgress" cx="45" cy="45" r="38" />
+                  </svg>
+                  <div class="score-text-center">
+                    <div class="score-number" id="productivityScoreNumber">0%</div>
+                    <div class="score-sublabel">Score</div>
+                  </div>
+                </div>
+
+                <div class="productivity-breakdown">
+                  <div class="breakdown-row">
+                    <span class="breakdown-label">Daily Goal</span>
+                    <span class="breakdown-val" id="prodCompletedCount">0 of 5</span>
+                  </div>
+                  <div class="progress-container">
+                    <div class="progress-bar success" id="prodDailyGoalProgress" style="width: 0%;"></div>
+                  </div>
+                  <div class="breakdown-row" style="font-size: 0.75rem;">
+                    <span class="text-muted">Target Completion</span>
+                    <span class="font-bold text-success" id="prodDailyGoalPercent">0%</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Mon-Sun Activity Bar Chart -->
+              <div style="border-top: 1px solid var(--border-subtle); padding-top: 1rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+                  <span style="font-size: 0.8125rem; font-weight: 700; color: var(--text-main);">Weekly Task Velocity</span>
+                  <span style="font-size: 0.75rem; color: var(--text-muted);">Mon — Sun</span>
+                </div>
+                <div class="chart-container" id="weeklyActivityChart"></div>
+              </div>
+            </div>
+
+            <!-- Quick Actions Grid -->
+            <div class="card" id="quickActionsCard">
+              <h4 style="font-size: 0.9375rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-main);">Quick Shortcuts</h4>
+              <div class="quick-actions-grid">
+                <button class="quick-action-btn" data-open-modal="addTaskModal">
+                  <div class="quick-action-icon" style="background-color: var(--primary-light); color: var(--primary);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  </div>
+                  <div class="quick-action-title">Create Task</div>
+                  <div class="quick-action-desc">Add priority item</div>
+                </button>
+
+                <button class="quick-action-btn" data-open-modal="requestLeaveModal">
+                  <div class="quick-action-icon" style="background-color: rgba(16, 185, 129, 0.12); color: var(--success-dark);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+                  </div>
+                  <div class="quick-action-title">Request Leave</div>
+                  <div class="quick-action-desc">Apply for time off</div>
+                </button>
+
+                <a href="/pages/calendar.html" class="quick-action-btn">
+                  <div class="quick-action-icon" style="background-color: var(--secondary-light); color: var(--secondary);">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  </div>
+                  <div class="quick-action-title">Schedule Event</div>
+                  <div class="quick-action-desc">Open calendar view</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMPLOYEE SALARY & PAYROLL SECTION (Visible to Employees) -->
+        <section class="card salary-dashboard-section" id="employeeSalarySection" style="margin-top: 2rem;">
+          <div class="card-header" style="flex-wrap: wrap; gap: 1rem; align-items: flex-start;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(16, 185, 129, 0.12); color: var(--success); display: flex; align-items: center; justify-content: center;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+                </div>
+                <div>
+                  <h3 class="card-title" style="margin: 0; font-size: 1.125rem;">Compensation, Salary & Payslips</h3>
+                  <p class="card-subtitle" style="margin: 0;">View salary breakdown, earnings, deductions, and download official payslips</p>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <button type="button" class="btn btn-secondary btn-sm" id="btnDownloadLatestPayslip">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                <span>Download Latest Slip (PDF)</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Live Salary Overview Metric Row -->
+          <div class="salary-overview-grid" id="salaryMetricsGrid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Annual CTC</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);" id="empAnnualCTC">$0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Gross Annual Package</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Monthly Gross</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="empMonthlyGross">$0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Before Taxes & Deductions</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Total Deductions</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--danger);" id="empTotalDeductions">$0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Tax + PF + Insurance</div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.1) 0%, var(--bg-subtle) 100%); border: 1px solid rgba(16, 185, 129, 0.3); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--success); text-transform: uppercase; margin-bottom: 0.25rem;">Net Take-Home</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--success);" id="empNetSalary">$0</div>
+              <div style="font-size: 0.75rem; color: var(--success); font-weight: 600; margin-top: 0.25rem;">Direct Deposit / Month</div>
+            </div>
+          </div>
+
+          <!-- Salary Component Breakdown & Bank Details -->
+          <div class="salary-breakdown-subgrid" style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 1.25rem; margin-top: 1.5rem;">
+            <!-- Component Breakdown -->
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                <span>Monthly Earnings & Deductions Breakdown</span>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                <!-- Earnings Column -->
+                <div>
+                  <div style="font-size: 0.75rem; font-weight: 700; color: var(--success); text-transform: uppercase; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.25rem;">Earnings (Credit)</div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">Basic Salary (50%)</span>
+                    <strong id="breakdownBasic">$0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">House Rent Allow. (HRA)</span>
+                    <strong id="breakdownHRA">$0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">Special Allowance</span>
+                    <strong id="breakdownSpecial">$0</strong>
+                  </div>
+                </div>
+
+                <!-- Deductions Column -->
+                <div>
+                  <div style="font-size: 0.75rem; font-weight: 700; color: var(--danger); text-transform: uppercase; margin-bottom: 0.5rem; border-bottom: 1px solid var(--border-subtle); padding-bottom: 0.25rem;">Deductions (Debit)</div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">Income Tax (TDS ~12%)</span>
+                    <strong style="color: var(--danger);" id="breakdownTax">-$0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">Provident Fund (PF 5%)</span>
+                    <strong style="color: var(--danger);" id="breakdownPF">-$0</strong>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; font-size: 0.8125rem; padding: 0.25rem 0;">
+                    <span class="text-muted">Health & Life Insurance</span>
+                    <strong style="color: var(--danger);" id="breakdownInsurance">-$250</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Bank & Payout Information -->
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M3 10h18M5 6l7-3 7 3M4 10v11M20 10v11M8 14v4M12 14v4M16 14v4"/></svg>
+                <span>Disbursement Details</span>
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8125rem;">
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Bank Institution:</span>
+                  <strong id="empBankName">JPMorgan Chase Bank, N.A.</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Account Number:</span>
+                  <strong id="empBankAccount">•••• •••• 8492</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Tax ID / PAN:</span>
+                  <strong id="empTaxPan">DF-US-948102</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                  <span class="text-muted">Disbursement Cycle:</span>
+                  <span class="badge badge-success" style="font-size: 0.7rem;">Monthly (Last Working Day)</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Monthly Payslips History Table -->
+          <div style="margin-top: 1.5rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Salary Slips & Tax Receipts</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Official Authorized PDF Documents</span>
+            </div>
+            <div class="table-responsive" style="overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md);">
+              <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
+                <thead>
+                  <tr style="background: var(--bg-subtle); border-bottom: 1px solid var(--border-subtle); color: var(--text-muted);">
+                    <th style="padding: 0.75rem 1rem;">Pay Period</th>
+                    <th style="padding: 0.75rem 1rem;">Gross Pay</th>
+                    <th style="padding: 0.75rem 1rem;">Deductions</th>
+                    <th style="padding: 0.75rem 1rem;">Net Disbursed</th>
+                    <th style="padding: 0.75rem 1rem;">Status</th>
+                    <th style="padding: 0.75rem 1rem; text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="employeePayslipTableBody">
+                  <!-- Dynamically Rendered -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- HR MASTER EMPLOYEE DIRECTORY & RECORDS (Visible ONLY to Single HR Partner) -->
+        <section class="card hr-records-dashboard-section" id="hrAllEmployeesSection" style="margin-top: 2rem; display: none;">
+          <div class="card-header" style="flex-wrap: wrap; gap: 1rem; align-items: flex-start;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: linear-gradient(135deg, rgba(124, 58, 237, 0.15) 0%, rgba(79, 70, 229, 0.15) 100%); color: #7C3AED; display: flex; align-items: center; justify-content: center;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                </div>
+                <div>
+                  <h3 class="card-title" style="margin: 0; font-size: 1.125rem;">HR Master Records & All Employee Directory</h3>
+                  <p class="card-subtitle" style="margin: 0;">Comprehensive records of all company staff, payroll CTC, leave balances, and salary slips</p>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <a href="/pages/login.html?mode=register" class="btn btn-primary btn-sm" id="hrBtnAddNewEmp">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>+ Add New Employee Account</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- HR Aggregate Stat Cards -->
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-top: 1.25rem;">
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Total Employees</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--text-main);" id="hrTotalEmpCount">0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Active on payroll</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Monthly Payroll Budget</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--primary);" id="hrTotalMonthlyPayroll">$0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Total gross disbursement</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Annual CTC Commitment</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: #7C3AED;" id="hrTotalAnnualCTC">$0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Across all business units</div>
+            </div>
+
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.25rem;">Pending Approvals</div>
+              <div style="font-size: 1.5rem; font-weight: 800; color: var(--warning);" id="hrPendingApprovalsCount">0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">Leave requests awaiting review</div>
+            </div>
+          </div>
+
+          <!-- HR Filter and Search Controls -->
+          <div style="display: flex; gap: 0.75rem; margin-top: 1.5rem; flex-wrap: wrap; align-items: center;">
+            <div style="flex: 1; min-width: 240px; position: relative;">
+              <input type="text" id="hrEmpSearchInput" class="form-input" placeholder="Search employee by name, ID, role, department..." style="padding-left: 2.25rem;" />
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="position: absolute; left: 0.75rem; top: 50%; transform: translateY(-50%); color: var(--text-muted);"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            </div>
+            <select id="hrDeptFilter" class="form-select" style="width: auto;">
+              <option value="all">All Departments</option>
+              <option value="Product Experience & Design Systems">Product Experience & Design</option>
+              <option value="Engineering & Platform Infrastructure">Engineering & Infrastructure</option>
+              <option value="Product Management & Strategy">Product Strategy</option>
+            </select>
+          </div>
+
+          <!-- HR Employee Records Master Table -->
+          <div class="table-responsive" style="overflow-x: auto; background: var(--bg-surface); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); margin-top: 1rem;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 0.8125rem; text-align: left;">
+              <thead>
+                <tr style="background: var(--bg-subtle); border-bottom: 1px solid var(--border-subtle); color: var(--text-muted);">
+                  <th style="padding: 0.75rem 1rem;">Employee</th>
+                  <th style="padding: 0.75rem 1rem;">ID & Role</th>
+                  <th style="padding: 0.75rem 1rem;">Department</th>
+                  <th style="padding: 0.75rem 1rem;">Annual CTC</th>
+                  <th style="padding: 0.75rem 1rem;">Monthly Gross</th>
+                  <th style="padding: 0.75rem 1rem;">Net Take-Home</th>
+                  <th style="padding: 0.75rem 1rem; text-align: right;">Actions (Slip & Delete Account)</th>
+                </tr>
+              </thead>
+              <tbody id="hrEmployeeMasterTableBody">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- NEW: Leave Management Section in Dashboard -->
+        <section class="card leave-dashboard-section" id="dashboardLeaveSection" style="margin-top: 2rem;">
+          <div class="card-header" style="flex-wrap: wrap; gap: 1rem; align-items: flex-start;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.625rem;">
+                <div style="width: 36px; height: 36px; border-radius: var(--radius-md); background: rgba(79, 70, 229, 0.12); color: var(--primary); display: flex; align-items: center; justify-content: center;">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+                </div>
+                <div>
+                  <h3 class="card-title" style="margin: 0; font-size: 1.125rem;">Leave Management & Quota Balances</h3>
+                  <p class="card-subtitle" style="margin: 0;">Monitor available balances, view pending requests, and request time off</p>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+              <a href="/pages/leaves.html" class="btn btn-secondary btn-sm" id="btnViewFullLeavesHub">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <span>Full Leaves Hub →</span>
+              </a>
+              <button class="btn btn-primary btn-sm" data-open-modal="requestLeaveModal" id="dashRequestLeaveQuickBtn">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                <span>Request Leave</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Leave Balances Overview (Live visual cards) -->
+          <div style="margin-top: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem;">
+              <span style="font-size: 0.8125rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);">Remaining Leave Balances (Fiscal Year)</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Auto-renewed Jan 1</span>
+            </div>
+            <div class="leave-balances-grid" id="dashLeaveBalancesGrid">
+              <div class="skeleton" style="height: 120px; border-radius: var(--radius-md);"></div>
+              <div class="skeleton" style="height: 120px; border-radius: var(--radius-md);"></div>
+              <div class="skeleton" style="height: 120px; border-radius: var(--radius-md);"></div>
+              <div class="skeleton" style="height: 120px; border-radius: var(--radius-md);"></div>
+            </div>
+          </div>
+
+          <!-- Subgrid: Pending Requests & Upcoming Summary -->
+          <div class="dash-leave-subgrid" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.25rem; margin-top: 1.5rem;">
+            <!-- Left: Pending Requests Container -->
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem;">
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main); display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  <span>Pending & Active Leave Requests</span>
+                </div>
+                <span class="badge-empid" id="dashPendingBadgeCount">0 Pending</span>
+              </div>
+              <div id="dashPendingRequestsContainer">
+                <div class="skeleton" style="height: 70px; margin-bottom: 0.5rem;"></div>
+              </div>
+            </div>
+
+            <!-- Right: Quick Time Off Highlights -->
+            <div style="background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); padding: 1.25rem; display: flex; flex-direction: column; justify-content: space-between;">
+              <div>
+                <div style="font-weight: 700; font-size: 0.9375rem; color: var(--text-main); margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                  <span>Next Official Holiday</span>
+                </div>
+                <div id="dashNextHolidayCard">
+                  <div style="font-size: 0.875rem; color: var(--text-muted);">Loading calendar...</div>
+                </div>
+
+                <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px dashed var(--border-subtle);">
+                  <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; margin-bottom: 0.25rem;">Approving Manager</div>
+                  <div style="font-weight: 600; font-size: 0.875rem; color: var(--text-main);" class="user-manager-display">Sarah Chen (VP of Product)</div>
+                </div>
+              </div>
+
+              <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-subtle);">
+                <button class="btn btn-primary" data-open-modal="requestLeaveModal" style="width: 100%; justify-content: center;">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  <span>Request Leave Now</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Reusable Add Task Modal -->
+  <div class="modal-backdrop" id="addTaskModal">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 style="font-size: 1.125rem; font-weight: 700; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Create New Task
+        </h3>
+        <button class="btn btn-icon btn-sm" data-close-modal aria-label="Close modal">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
+
+      <form id="addTaskForm">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="taskTitle">Task Title *</label>
+            <input type="text" id="taskTitle" class="form-input" placeholder="e.g. Finish UI/UX prototype presentation" required />
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDesc">Description <span class="optional">Optional</span></label>
+            <textarea id="taskDesc" class="form-textarea" placeholder="Add context, subtasks, or checklist items..."></textarea>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskCategory">Category</label>
+              <select id="taskCategory" class="form-select">
+                <option value="Work">Work</option>
+                <option value="Study">Study</option>
+                <option value="Personal">Personal</option>
+                <option value="Health">Health</option>
+                <option value="Finance">Finance</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskPriority">Priority</label>
+              <select id="taskPriority" class="form-select">
+                <option value="Medium">Medium</option>
+                <option value="High">High</option>
+                <option value="Urgent">Urgent</option>
+                <option value="Low">Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="taskDueDate">Due Date *</label>
+              <input type="date" id="taskDueDate" class="form-input" required />
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="taskDueTime">Due Time</label>
+              <input type="time" id="taskDueTime" class="form-input" value="17:00" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="taskDuration">Estimated Duration (Minutes)</label>
+            <input type="number" id="taskDuration" class="form-input" value="45" min="5" step="5" />
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+          <button type="submit" class="btn btn-primary">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reusable Request Leave Modal -->
+  <div class="modal-backdrop" id="requestLeaveModal">
+    <div class="modal-card" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 class="modal-title" style="display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+          Request Employee Leave
+        </h3>
+        <button class="modal-close-btn" data-close-modal="requestLeaveModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <form id="dashLeaveRequestForm">
+        <div class="modal-body" style="padding: 1.25rem 1.5rem; max-height: 72vh; overflow-y: auto;">
+          <!-- Leave Type Picker Grid -->
+          <div class="form-group">
+            <label class="form-label">Leave Category</label>
+            <div class="leave-type-cards-picker" id="dashModalTypePicker">
+              <div class="leave-type-option" data-type="annual">
+                <div class="leave-type-option-title">Annual Leave</div>
+                <div class="leave-type-option-bal" id="dashOptBalAnnual">11 days left</div>
+              </div>
+              <div class="leave-type-option" data-type="sick">
+                <div class="leave-type-option-title">Sick Leave</div>
+                <div class="leave-type-option-bal" id="dashOptBalSick">8 days left</div>
+              </div>
+              <div class="leave-type-option selected" data-type="casual">
+                <div class="leave-type-option-title">Casual Leave</div>
+                <div class="leave-type-option-bal" id="dashOptBalCasual">5 days left</div>
+              </div>
+              <div class="leave-type-option" data-type="remote">
+                <div class="leave-type-option-title">Remote / WFH</div>
+                <div class="leave-type-option-bal" id="dashOptBalRemote">8 days left</div>
+              </div>
+              <div class="leave-type-option" data-type="compOff">
+                <div class="leave-type-option-title">Comp Off</div>
+                <div class="leave-type-option-bal" id="dashOptBalCompOff">2 days left</div>
+              </div>
+              <div class="leave-type-option" data-type="parental">
+                <div class="leave-type-option-title">Parental Leave</div>
+                <div class="leave-type-option-bal" id="dashOptBalParental">60 days left</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Date Range Selection -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="dashLeaveStartDate">From Date *</label>
+              <input type="date" id="dashLeaveStartDate" class="form-control" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dashLeaveEndDate">To Date *</label>
+              <input type="date" id="dashLeaveEndDate" class="form-control" required />
+            </div>
+          </div>
+
+          <!-- Half Day Option & Duration Preview -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="dashLeaveHalfDay">Working Shift</label>
+              <select id="dashLeaveHalfDay" class="form-control">
+                <option value="none">Full Day(s)</option>
+                <option value="first-half">First Half (Morning Session)</option>
+                <option value="second-half">Second Half (Afternoon Session)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Calculated Working Days</label>
+              <div class="leave-duration-preview-badge" id="dashLeaveDurationPreview" style="display: flex; align-items: center; justify-content: space-between; padding: 0.625rem 0.875rem; background: var(--bg-subtle); border: 1px solid var(--border-subtle); border-radius: var(--radius-md); font-size: 0.875rem;">
+                <span>Total:</span>
+                <strong style="color: var(--primary);" id="dashLeaveDurationText">1 Working Day</strong>
+              </div>
+            </div>
+          </div>
+
+          <!-- Balance Warning Alert (if any) -->
+          <div id="dashLeaveBalanceWarning" style="display: none; background: #FFFBEB; border: 1px solid #FCD34D; color: #92400E; padding: 0.75rem; border-radius: var(--radius-md); font-size: 0.8125rem; margin-bottom: 1rem;">
+          </div>
+
+          <!-- Reason -->
+          <div class="form-group">
+            <label class="form-label" for="dashLeaveReason">Reason / Purpose of Leave *</label>
+            <input type="text" id="dashLeaveReason" class="form-control" placeholder="e.g. Family vacation, personal errand, medical appointment..." required />
+          </div>
+
+          <!-- Handover Colleague & Emergency Phone -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div class="form-group">
+              <label class="form-label" for="dashLeaveHandoverColleague">Handover Colleague</label>
+              <select id="dashLeaveHandoverColleague" class="form-control">
+                <option value="Liam Vance (Senior UI Designer)">Liam Vance (Senior UI Designer)</option>
+                <option value="Maya Patel (Product Manager)">Maya Patel (Product Manager)</option>
+                <option value="David Kim (Cloud Architect)">David Kim (Cloud Architect)</option>
+                <option value="Sarah Chen (VP of Product)">Sarah Chen (VP of Product)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="dashLeaveEmergencyContact">Emergency Contact</label>
+              <input type="text" id="dashLeaveEmergencyContact" class="form-control" value="+1 (555) 019-2835" />
+            </div>
+          </div>
+
+          <!-- Additional Notes -->
+          <div class="form-group">
+            <label class="form-label" for="dashLeaveAdditionalNotes">Handover Notes / Docs (Optional)</label>
+            <textarea id="dashLeaveAdditionalNotes" class="form-control" rows="2" placeholder="Link to Jira tickets, coverage notes, or emergency contacts..."></textarea>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 1rem 1.5rem; display: flex; justify-content: flex-end; gap: 0.75rem; border-top: 1px solid var(--border-subtle);">
+          <button type="button" class="btn btn-secondary" data-close-modal="requestLeaveModal">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="dashBtnSubmitLeave">
+            Submit Leave Request
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Reusable Leave Authorization Slip Modal -->
+  <div class="modal-backdrop" id="leaveSlipModal">
+    <div class="modal-card" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 class="modal-title">Leave Authorization Slip</h3>
+        <button class="modal-close-btn" data-close-modal="leaveSlipModal" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body" id="dashLeaveSlipBody" style="padding: 1.5rem;"></div>
+    </div>
+  </div>
+
+  <!-- Official Payslip View & Printable Download Modal -->
+  <div class="modal-backdrop" id="payslipViewModal">
+    <div class="modal-card" style="max-width: 680px;">
+      <div class="modal-header" style="border-bottom: 1px solid var(--border-subtle); padding: 1.25rem 1.5rem;">
+        <div style="display: flex; align-items: center; gap: 0.5rem;">
+          <div style="width: 32px; height: 32px; border-radius: var(--radius-sm); background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>
+          </div>
+          <div>
+            <h3 class="modal-title" style="margin: 0; font-size: 1.125rem;">Official Salary Slip</h3>
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Authorized by DayFlow Global HR & Payroll</span>
+          </div>
+        </div>
+        <button class="modal-close-btn" data-close-modal="payslipViewModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body" id="payslipModalContent" style="padding: 1.5rem; max-height: 75vh; overflow-y: auto;">
+        <!-- Dynamically rendered printable slip template -->
+      </div>
+
+      <div class="modal-footer" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); background: var(--bg-subtle);">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="payslipViewModal">Close</button>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="btn btn-primary btn-sm" id="btnModalPrintPayslip">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Download Slip (HTML / PDF)</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HR Delete Employee Confirmation Modal -->
+  <div class="modal-backdrop" id="confirmDeleteEmployeeModal">
+    <div class="modal-card" style="max-width: 460px;">
+      <div class="modal-header" style="border-bottom: 2px solid var(--danger); padding: 1.25rem 1.5rem;">
+        <h3 class="modal-title" style="color: var(--danger); font-size: 1.125rem; font-weight: 800; display: flex; align-items: center; gap: 0.5rem;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          Delete Employee Account?
+        </h3>
+        <button class="modal-close-btn" data-close-modal="confirmDeleteEmployeeModal" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body" style="padding: 1.5rem;">
+        <p style="font-size: 0.875rem; color: var(--text-main); margin-bottom: 0.75rem; line-height: 1.5;">
+          Are you sure you want to permanently delete the account for:
+        </p>
+        <div style="background: rgba(239, 68, 68, 0.08); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 0.875rem; margin-bottom: 1rem;">
+          <div id="hrDeleteTargetEmpName" style="font-weight: 800; color: var(--danger); font-size: 0.9375rem;">Employee Name</div>
+          <div id="hrDeleteTargetEmpEmail" style="font-size: 0.8125rem; color: var(--text-muted); margin-top: 0.15rem;">employee@dayflow.corp</div>
+        </div>
+        <p style="font-size: 0.8125rem; color: var(--text-muted); line-height: 1.4;">
+          This will permanently remove the employee record, tasks, leave records, and cloud Firestore document. This action cannot be undone.
+        </p>
+      </div>
+
+      <div class="modal-footer" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-subtle); background: var(--bg-subtle);">
+        <button type="button" class="btn btn-secondary btn-sm" data-close-modal="confirmDeleteEmployeeModal">Cancel</button>
+        <button type="button" class="btn btn-danger btn-sm" id="btnConfirmHREmployeeDelete">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+          <span>Delete Account</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Core Scripts -->
+  <script type="module" src="/js/firebase-service.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/dashboard.js"></script>
+</body>
+</html>
